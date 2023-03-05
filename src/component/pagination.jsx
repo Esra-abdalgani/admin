@@ -1,44 +1,49 @@
-import { faArrowRight ,faArrowLeft } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { useState } from "react"
 
-const Pagination = ({currentPage , getPageNumber}) =>
-{
-   let [num, setNum] = useState(1)
+const Pagination = ({ currentPage, totalPages, onChangePage }) => {
+  const pageNumbers = [currentPage-1,currentPage,currentPage+1]
 
+  return (
+    <nav className="flex justify-center">
+      <ul className="flex items-center space-x-2">
+        <li>
+          <button
+            className={`px-2 py-1 rounded-md ${
+              currentPage === 1 ? "bg-gray-200 cursor-not-allowed" : "bg-white"
+            }`}
+            onClick={() => onChangePage(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
+        </li>
+        {pageNumbers.map((number) => (
+          <li key={number}>
+            <button
+              className={`px-2 py-1 rounded-md ${
+                currentPage === number ? "bg-gray-400 text-white" : "bg-white"
+              }`}
+              onClick={() => onChangePage(number)}
+            >
+              {number}
+            </button>
+          </li>
+        ))}
+        <li>
+          <button
+            className={`px-2 py-1 rounded-md ${
+              currentPage === totalPages
+                ? "bg-gray-200 cursor-not-allowed"
+                : "bg-white"
+            }`}
+            onClick={() => onChangePage(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
+        </li>
+      </ul>
+    </nav>
+  );
+};
 
-   const pages = [
-      { page: num },
-      { page: num + 1 },
-      { page: num + 2 },
-      { page: num + 3 },
-   ]
-   function Next ()
-   {
-      setNum(++num)
-      getPageNumber(num => num + 1)
- 
-   }
-   function back ()
-   {
-      num > 1 && setNum(--num)
-      getPageNumber(num => num - 1)
-   }
-   return (
-      <div className="flex bg-white rounded-lg font-[Poppins]">
-         <button onClick={back} className=" hover:bg-indigo-600 hover:text-white">
-            <FontAwesomeIcon icon={faArrowLeft} /> 
-         </button>
-         {
-            pages.map((pg, i) => (
-               <button key={i} onClick={() => getPageNumber(pg.page)} className={` ${currentPage === pg.page && 'bg-indigo-600 '}`}>{pg.page}</button>
-            ))
-         }
-         <button onClick={Next} className="hover:bg-indigo-600 hover:text-white">
-            <FontAwesomeIcon icon={faArrowRight} /> 
-         </button>
-      </div>
-   )
-}
-
-export default Pagination
+export default Pagination;

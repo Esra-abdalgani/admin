@@ -9,13 +9,13 @@ import SideBar from './layout/SideBar'
 const Layout = () => {
 
   return (
-<div className=' flex w-full h-screen  text-grey-90'>
+    <div className=' flex w-full h-screen  text-grey-90'>
       <SideBar />
       <div className="flex flex-col flex-1">
         <Header/>
         <Outlet/>
-</div>
-</div>
+      </div>
+    </div>
      
 
   )
