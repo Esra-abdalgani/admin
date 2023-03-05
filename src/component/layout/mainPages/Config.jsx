@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import useAuth from '../../../hooks/useAuth'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCirclePlus,faPenToSquare } from '@fortawesome/free-solid-svg-icons'
+import { v4 as uuid } from 'uuid'
 
 
 
@@ -11,7 +12,7 @@ const Config = () => {
   let { auth } = useAuth()
   let [configObject,setConfigObject] = useState({})
   const navigate = useNavigate();
-  console.log(auth)
+
 
   useEffect(() => {
     const getGonfigList = async () => {
@@ -29,7 +30,7 @@ const Config = () => {
   let displayConfigList = () => {
     let ConfigKeys = Object.keys(configObject)
     return ConfigKeys.map(key => {
-      return  <tr >
+      return  <tr key={uuid()} >
                   <td className="p-2" >{key}</td>
                   <td>{configObject[key]}</td>
                   <td className='text-green-600 cursor-pointer' onClick={() => saveUpdateConfig(key) }>
