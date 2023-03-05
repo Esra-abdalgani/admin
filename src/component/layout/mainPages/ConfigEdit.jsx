@@ -13,7 +13,6 @@ const ConfigEdit = () => {
   })
 
   function handleChange(e){
-    console.log(e.target)
     let { name , value } = e.target
     setconfig(config =>({ ...config,[name]:`${value}` }))
   }

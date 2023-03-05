@@ -1,4 +1,5 @@
 import axios  from "axios"
+import { Navigate } from "react-router-dom"
 const BASE_URL="https://staging-blockchain-payment.livaat.com/api"
 
 
@@ -23,7 +24,6 @@ api.interceptors.response.use(
   error => {
     if(error.response.status === 401){
       setAuthToken(null)
-
     }
     return Promise.reject(error)
   }
