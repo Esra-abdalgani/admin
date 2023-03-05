@@ -1,19 +1,19 @@
 import { useRef, useState, useEffect } from 'react';
-import axios, { setAuthToken } from '../api/axios';
-import { useNavigate } from 'react-router-dom'
+import { setAuthToken ,makeRequest } from '../api/axios';
+import {  useNavigate } from 'react-router-dom'
 import useAuth from '../hooks/useAuth';
 
 
 const Login = () => {
-	
   const { setAuth } = useAuth();
   const emailRef = useRef();
   const errRef = useRef();
   let navigate = useNavigate()
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [errMsg, setErrMsg] = useState('');
-
+  const [userinfo, setUserinfo] = useState({
+    email:'',
+    password:''
+  })
+  const [errMsg, setErrMsg] = useState('')
 
   useEffect(() => {
     emailRef.current.focus();
@@ -21,43 +21,37 @@ const Login = () => {
 
   useEffect(() => {
     setErrMsg('');
-  }, [email, password]);
+  }, [userinfo]);
+
+  function handleChange(e){
+    let { name , value } = e.target
+    setUserinfo(userinfo =>({ ...userinfo ,[name]:`${value}` }))
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    try {
-      const response = await axios.post(
-        '/admins/login',{
-          "email": `${email}`,
-          "password" : `${password}`
+      makeRequest('POST', '/admins/login', JSON.stringify(userinfo))
+      .then(response => {
+        console.log(response)
+        setAuth(response.data)
+        setUserinfo('')
+        setAuthToken(response.data.token)
+        navigate('/admin/countriesList')
+      })
+      .catch(err => {
+        switch (err?.response?.status) {
+        case 400:
+          setErrMsg('Missing Username or Password')
+          break
+        case 401:
+          setErrMsg('Unauthorized')
+          break
+        default:
+          setErrMsg(err?.response ? 'Login Failed' : 'No Server Response')
+          errRef.current.focus()
         }
-      );
-
-			
-      console.log(response.data.data)
-		 const token = response.data.data.token
-		 const id = response.data.data.id
-		 const name = response.data.data.name
-      setAuth({id,name, email, password,token });
-      setEmail('');
-      setAuthToken(token)
-      setPassword('');
-      navigate('/admin/countriesList');
-    } catch (err) {
-      if (!err?.response) {
-        setErrMsg('No Server Response');
-      } else if (err.response?.status === 400) {
-        setErrMsg('Missing Username or Password');
-      } else if (err.response?.status === 401) {
-        setErrMsg('Unauthorized');
-      } else {
-        setErrMsg('Login Failed');
-      }
-      errRef.current.focus();
-    }
-
-
+      })
+  
   };
 
   return (
@@ -71,18 +65,18 @@ const Login = () => {
         >
           {errMsg}
         </p>
-        <h1 className="text-3xl mb-5">Login In</h1>
-        <form onSubmit={handleSubmit} className="flex flex-col  justify-center items-center gap-2">
+        <h1 className="text-3xl mb-5">Login</h1>
+        <form onSubmit={e => handleSubmit(e)} className="flex flex-col  justify-center items-center gap-2">
 
           <input
             className="border border-1 w-full  p-1 outline-0 border-slate-300"
             placeholder='Email'
             type="text"
-            id="Email"
+            name="email"
             ref={emailRef}
             autoComplete="off"
-            onChange={(e) => setEmail(e.target.value)}
-            value={email}
+            onChange={(e) => handleChange(e)}
+            value={userinfo.email || ''}
             required
           />
 
@@ -90,9 +84,9 @@ const Login = () => {
             className="border border-1 w-full  p-1 outline-0 border-slate-300"
             placeholder='password'
             type="password"
-            id="password"
-            onChange={(e) => setPassword(e.target.value)}
-            value={password}
+            name="password"
+            onChange={(e) => handleChange(e)}
+            value={userinfo.password || ''}
             required
           />
           <button className="bg-cyan-600 w-full text-white p-2 mb-5">Sign In</button>

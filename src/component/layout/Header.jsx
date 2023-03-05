@@ -17,6 +17,7 @@ const Header = () => {
         <FontAwesomeIcon className='mx-5 cursor-pointer' icon={faBell}/>
         <FontAwesomeIcon className='cursor-pointer' icon={faUser}/>
       </div>
+      
     </header>
 
   )
