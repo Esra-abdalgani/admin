@@ -32,7 +32,6 @@ const Login = () => {
     e.preventDefault();
       makeRequest('POST', '/admins/login', JSON.stringify(userinfo))
       .then(response => {
-        console.log(response)
         setAuth(response.data)
         setUserinfo('')
         setAuthToken(response.data.token)

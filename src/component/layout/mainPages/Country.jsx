@@ -10,7 +10,6 @@ import { makeRequest } from '../../../api/axios'
 
 const Country = () => {
   const { id } = useParams()
-  console.log(id)
   const navigate = useNavigate()
   const [country ,setCountry] = useState({})
 

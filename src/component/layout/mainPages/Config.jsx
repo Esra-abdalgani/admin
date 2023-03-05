@@ -16,8 +16,7 @@ const Config = () => {
   useEffect(() => {
     const getGonfigList = async () => {
       let res = await makeRequest('GET' ,'/admin/config')
-      console.log(res.data)
-      setConfigObject(res.data[0])
+      setConfigObject(res.data[0] || '')
     }
     getGonfigList()
   },[])
