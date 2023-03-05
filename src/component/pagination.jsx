@@ -1,6 +1,6 @@
 
 const Pagination = ({ currentPage, totalPages, onChangePage }) => {
-  const pageNumbers = [currentPage-1,currentPage,currentPage+1]
+  const pageNumbers = [currentPage,currentPage+1,currentPage+2]
 
   return (
     <nav className="flex justify-center">
